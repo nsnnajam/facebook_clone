@@ -1,10 +1,13 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import "package:flutter/material.dart";
 import 'package:myfb/Secreen/HomeSecreen.dart';
+import 'package:myfb/Secreen/Login/signin.dart';
+import 'package:myfb/Secreen/Login/userdetail.dart';
 import 'package:myfb/Secreen/friendReq.dart';
 import 'package:myfb/Secreen/messages.dart';
 import 'package:myfb/function/text.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TabbarSecreenSecreen extends StatefulWidget {
   const TabbarSecreenSecreen({Key? key}) : super(key: key);
@@ -35,7 +38,32 @@ class _TabbarSecreenSecreenState extends State<TabbarSecreenSecreen>
                 shadows: [Shadow(color: Colors.grey)],
               )),
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Alert!!"),
+                      content: Text("You are sure!"),
+                      actions: <Widget>[
+                        ElevatedButton(
+                            onPressed: () async {
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              prefs.setBool('isLoggedIn', false);
+                              // ignore: use_build_context_synchronously
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Userlogin()),
+                              );
+                            },
+                            child: const Text("log out"))
+                      ],
+                    );
+                  },
+                );
+              },
               icon: const Icon(
                 Icons.menu,
                 color: Colors.black,
@@ -75,9 +103,7 @@ class _TabbarSecreenSecreenState extends State<TabbarSecreenSecreen>
           HomeSecreen(),
           FriendRequest(),
           MessagesSecreen(),
-          Center(
-            child: Text("It's cloudy here"),
-          ),
+          UserDetail(),
           Center(
             child: Text("It's rainy here"),
           ),
